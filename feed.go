@@ -52,12 +52,12 @@ func NewFeed(channel FeedData) *Feed {
 //
 // See https://help.apple.com/itc/podcasts_connect/#/itcb54353390
 func (f *Feed) Validate() error {
-	return f.xmlDoc.validate()
+	return f.validate()
 }
 
 // AddItem adds an episode item to the feed.
 func (f *Feed) AddItem(item *Item) {
-	f.xmlDoc.Channel.Items = append(f.xmlDoc.Channel.Items, item.xmlItem)
+	f.Channel.Items = append(f.Channel.Items, item.xmlItem)
 }
 
 func (f *Feed) Encode(w io.Writer) error {
@@ -83,7 +83,7 @@ func (f *Feed) Encode(w io.Writer) error {
 //
 // Author information is especially useful if a company or organization publishes multiple podcasts.
 func (f *Feed) WithAuthor(name string) *Feed {
-	f.xmlDoc.Channel.ItunesAuthor = name
+	f.Channel.ItunesAuthor = name
 	return f
 }
 
@@ -91,7 +91,7 @@ func (f *Feed) WithAuthor(name string) *Feed {
 //
 // Typically, a home page for a podcast or a dedicated portion of a larger website.
 func (f *Feed) WithLink(link string) *Feed {
-	f.xmlDoc.Channel.Link = link
+	f.Channel.Link = link
 	return f
 }
 
@@ -103,7 +103,7 @@ func (f *Feed) WithLink(link string) *Feed {
 // The date should be in RFC 2822 format (e.g., "Sat, 01 Apr 2023 19:00:00 GMT")
 // which is the same as time.RFC1123Z in Go.
 func (f *Feed) WithPubDate(pubDate time.Time) *Feed {
-	f.xmlDoc.Channel.PubDate = pubDate.Format(time.RFC1123Z)
+	f.Channel.PubDate = pubDate.Format(time.RFC1123Z)
 	return f
 }
 
@@ -113,7 +113,7 @@ func (f *Feed) WithPubDate(pubDate time.Time) *Feed {
 // The date should be in RFC 2822 format (e.g., "Sat, 01 Apr 2023 19:00:00 GMT")
 // which is the same as time.RFC1123Z in Go.
 func (f *Feed) WithLastBuildDate(lastBuildDate time.Time) *Feed {
-	f.xmlDoc.Channel.LastBuildDate = lastBuildDate.Format(time.RFC1123Z)
+	f.Channel.LastBuildDate = lastBuildDate.Format(time.RFC1123Z)
 	return f
 }
 
@@ -123,7 +123,7 @@ func (f *Feed) WithLastBuildDate(lastBuildDate time.Time) *Feed {
 // Do not include episode or season number in the title. There are dedicated tags for that information.
 // See WithItunesEpisode and WithItunesSeason.
 func (f *Feed) WithItunesTitle(title string) *Feed {
-	f.xmlDoc.Channel.ItunesTitle = title
+	f.Channel.ItunesTitle = title
 	return f
 }
 
@@ -131,14 +131,14 @@ func (f *Feed) WithItunesTitle(title string) *Feed {
 // If your show is Serial you must use this tag.
 // See ItunesType for possible values.
 func (f *Feed) WithItunesType(showType ItunesType) *Feed {
-	f.xmlDoc.Channel.ItunesType = showType
+	f.Channel.ItunesType = showType
 	return f
 }
 
 // WithCopyright sets the <copyright> tag of the feed.
 // If your show is copyrighted you should use this tag.
 func (f *Feed) WithCopyright(copyright string) *Feed {
-	f.xmlDoc.Channel.Copyright = copyright
+	f.Channel.Copyright = copyright
 	return f
 }
 
@@ -153,7 +153,7 @@ func (f *Feed) WithCopyright(copyright string) *Feed {
 // Note: The <itunes:new-feed-url> tag reports new feed URLs
 // to Apple Podcasts and isn’t displayed in Apple Podcasts.
 func (f *Feed) WithItunesNewFeedURL(newFeedURL string) *Feed {
-	f.xmlDoc.Channel.ItunesNewFeedURL = newFeedURL
+	f.Channel.ItunesNewFeedURL = newFeedURL
 	return f
 }
 
@@ -161,7 +161,7 @@ func (f *Feed) WithItunesNewFeedURL(newFeedURL string) *Feed {
 // Use this tag if you want to block your podcast from appearing in Apple Podcasts.
 // See ItunesBlock for possible values.
 func (f *Feed) WithItunesBlock(block ItunesBlock) *Feed {
-	f.xmlDoc.Channel.ItunesBlock = block
+	f.Channel.ItunesBlock = block
 	return f
 }
 
@@ -169,7 +169,7 @@ func (f *Feed) WithItunesBlock(block ItunesBlock) *Feed {
 // Use this tag if your podcast is complete and no new episodes will be added.
 // See ItunesComplete for possible values.
 func (f *Feed) WithItunesComplete(complete ItunesComplete) *Feed {
-	f.xmlDoc.Channel.ItunesComplete = complete
+	f.Channel.ItunesComplete = complete
 	return f
 }
 
@@ -177,7 +177,7 @@ func (f *Feed) WithItunesComplete(complete ItunesComplete) *Feed {
 // This tag is typically used to identify the software that generated the feed.
 // Hosting providers use this tag to identify themselves as the creator of an RSS feed.
 func (f *Feed) WithGenerator(generator string) *Feed {
-	f.xmlDoc.Channel.Generator = generator
+	f.Channel.Generator = generator
 	return f
 }
 
@@ -185,7 +185,7 @@ func (f *Feed) WithGenerator(generator string) *Feed {
 // This tag is similar to the <description> tag but is specific to Apple Podcasts.
 // It provides a summary of the podcast show.
 func (f *Feed) WithItunesSummary(summary string) *Feed {
-	f.xmlDoc.Channel.ItunesSummary = &xmlCDATA{Data: summary}
+	f.Channel.ItunesSummary = &xmlCDATA{Data: summary}
 	return f
 }
 
@@ -193,14 +193,14 @@ func (f *Feed) WithItunesSummary(summary string) *Feed {
 // This tag is a comma-separated list of keywords that describe your podcast.
 // Keywords help users find your podcast when they search in Apple Podcasts.
 func (f *Feed) WithItunesKeywords(keywords string) *Feed {
-	f.xmlDoc.Channel.ItunesKeywords = keywords
+	f.Channel.ItunesKeywords = keywords
 	return f
 }
 
 // WithItunesOwner sets the <itunes:owner> tag of the feed.
 // This tag contains information about the owner of the podcast, including name and email.
 func (f *Feed) WithItunesOwner(name, email string) *Feed {
-	f.xmlDoc.Channel.ItunesOwner = &xmlItunesOwner{
+	f.Channel.ItunesOwner = &xmlItunesOwner{
 		Name:  name,
 		Email: email,
 	}

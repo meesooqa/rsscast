@@ -27,24 +27,24 @@ func TestNewFeed(t *testing.T) {
 	}
 
 	// Test basic structure
-	if feed.xmlDoc.Version != xmlRssVersion {
-		t.Errorf("Expected version %s, got %s", xmlRssVersion, feed.xmlDoc.Version)
+	if feed.Version != xmlRssVersion {
+		t.Errorf("Expected version %s, got %s", xmlRssVersion, feed.Version)
 	}
 
-	if feed.xmlDoc.ItunesNS != xmlItunesNS {
-		t.Errorf("Expected iTunes namespace %s, got %s", xmlItunesNS, feed.xmlDoc.ItunesNS)
+	if feed.ItunesNS != xmlItunesNS {
+		t.Errorf("Expected iTunes namespace %s, got %s", xmlItunesNS, feed.ItunesNS)
 	}
 
-	if feed.xmlDoc.ContentNS != xmlContentNS {
-		t.Errorf("Expected content namespace %s, got %s", xmlContentNS, feed.xmlDoc.ContentNS)
+	if feed.ContentNS != xmlContentNS {
+		t.Errorf("Expected content namespace %s, got %s", xmlContentNS, feed.ContentNS)
 	}
 
-	if feed.xmlDoc.PodcastNS != xmlPodcastNS {
-		t.Errorf("Expected podcast namespace %s, got %s", xmlPodcastNS, feed.xmlDoc.PodcastNS)
+	if feed.PodcastNS != xmlPodcastNS {
+		t.Errorf("Expected podcast namespace %s, got %s", xmlPodcastNS, feed.PodcastNS)
 	}
 
 	// Test channel data
-	channel := feed.xmlDoc.Channel
+	channel := feed.Channel
 	if channel.Title != channelData.Title {
 		t.Errorf("Expected title %s, got %s", channelData.Title, channel.Title)
 	}
@@ -205,105 +205,105 @@ func TestFeedWithOptionalFields(t *testing.T) {
 	// Test WithAuthor
 	author := "Test Author"
 	feed.WithAuthor(author)
-	if feed.xmlDoc.Channel.ItunesAuthor != author {
-		t.Errorf("Expected author %s, got %s", author, feed.xmlDoc.Channel.ItunesAuthor)
+	if feed.Channel.ItunesAuthor != author {
+		t.Errorf("Expected author %s, got %s", author, feed.Channel.ItunesAuthor)
 	}
 
 	// Test WithLink
 	link := "https://example.com"
 	feed.WithLink(link)
-	if feed.xmlDoc.Channel.Link != link {
-		t.Errorf("Expected link %s, got %s", link, feed.xmlDoc.Channel.Link)
+	if feed.Channel.Link != link {
+		t.Errorf("Expected link %s, got %s", link, feed.Channel.Link)
 	}
 
 	// Test WithPubDate
 	pubDate := time.Date(2023, 4, 1, 19, 0, 0, 0, time.UTC)
 	feed.WithPubDate(pubDate)
 	expectedPubDate := pubDate.Format(time.RFC1123Z)
-	if feed.xmlDoc.Channel.PubDate != expectedPubDate {
-		t.Errorf("Expected pubDate %s, got %s", expectedPubDate, feed.xmlDoc.Channel.PubDate)
+	if feed.Channel.PubDate != expectedPubDate {
+		t.Errorf("Expected pubDate %s, got %s", expectedPubDate, feed.Channel.PubDate)
 	}
 
 	// Test WithLastBuildDate
 	lastBuildDate := time.Date(2023, 4, 2, 10, 0, 0, 0, time.UTC)
 	feed.WithLastBuildDate(lastBuildDate)
 	expectedLastBuildDate := lastBuildDate.Format(time.RFC1123Z)
-	if feed.xmlDoc.Channel.LastBuildDate != expectedLastBuildDate {
-		t.Errorf("Expected lastBuildDate %s, got %s", expectedLastBuildDate, feed.xmlDoc.Channel.LastBuildDate)
+	if feed.Channel.LastBuildDate != expectedLastBuildDate {
+		t.Errorf("Expected lastBuildDate %s, got %s", expectedLastBuildDate, feed.Channel.LastBuildDate)
 	}
 
 	// Test WithItunesTitle
 	itunesTitle := "iTunes Title"
 	feed.WithItunesTitle(itunesTitle)
-	if feed.xmlDoc.Channel.ItunesTitle != itunesTitle {
-		t.Errorf("Expected iTunes title %s, got %s", itunesTitle, feed.xmlDoc.Channel.ItunesTitle)
+	if feed.Channel.ItunesTitle != itunesTitle {
+		t.Errorf("Expected iTunes title %s, got %s", itunesTitle, feed.Channel.ItunesTitle)
 	}
 
 	// Test WithItunesType
 	feed.WithItunesType(TypeSerial)
-	if feed.xmlDoc.Channel.ItunesType != TypeSerial {
-		t.Errorf("Expected iTunes type %s, got %s", TypeSerial, feed.xmlDoc.Channel.ItunesType)
+	if feed.Channel.ItunesType != TypeSerial {
+		t.Errorf("Expected iTunes type %s, got %s", TypeSerial, feed.Channel.ItunesType)
 	}
 
 	// Test WithCopyright
 	copyright := "© 2023 Test Company"
 	feed.WithCopyright(copyright)
-	if feed.xmlDoc.Channel.Copyright != copyright {
-		t.Errorf("Expected copyright %s, got %s", copyright, feed.xmlDoc.Channel.Copyright)
+	if feed.Channel.Copyright != copyright {
+		t.Errorf("Expected copyright %s, got %s", copyright, feed.Channel.Copyright)
 	}
 
 	// Test WithItunesNewFeedURL
 	newFeedURL := "https://new-example.com/feed.xml"
 	feed.WithItunesNewFeedURL(newFeedURL)
-	if feed.xmlDoc.Channel.ItunesNewFeedURL != newFeedURL {
-		t.Errorf("Expected new feed URL %s, got %s", newFeedURL, feed.xmlDoc.Channel.ItunesNewFeedURL)
+	if feed.Channel.ItunesNewFeedURL != newFeedURL {
+		t.Errorf("Expected new feed URL %s, got %s", newFeedURL, feed.Channel.ItunesNewFeedURL)
 	}
 
 	// Test WithItunesBlock
 	feed.WithItunesBlock(BlockYes)
-	if feed.xmlDoc.Channel.ItunesBlock != BlockYes {
-		t.Errorf("Expected iTunes block %s, got %s", BlockYes, feed.xmlDoc.Channel.ItunesBlock)
+	if feed.Channel.ItunesBlock != BlockYes {
+		t.Errorf("Expected iTunes block %s, got %s", BlockYes, feed.Channel.ItunesBlock)
 	}
 
 	// Test WithItunesComplete
 	feed.WithItunesComplete(CompleteYes)
-	if feed.xmlDoc.Channel.ItunesComplete != CompleteYes {
-		t.Errorf("Expected iTunes complete %s, got %s", CompleteYes, feed.xmlDoc.Channel.ItunesComplete)
+	if feed.Channel.ItunesComplete != CompleteYes {
+		t.Errorf("Expected iTunes complete %s, got %s", CompleteYes, feed.Channel.ItunesComplete)
 	}
 
 	// Test WithGenerator
 	generator := "Voxify RSS Generator"
 	feed.WithGenerator(generator)
-	if feed.xmlDoc.Channel.Generator != generator {
-		t.Errorf("Expected generator %s, got %s", generator, feed.xmlDoc.Channel.Generator)
+	if feed.Channel.Generator != generator {
+		t.Errorf("Expected generator %s, got %s", generator, feed.Channel.Generator)
 	}
 
 	// Test WithItunesSummary
 	summary := "This is a podcast summary"
 	feed.WithItunesSummary(summary)
-	if feed.xmlDoc.Channel.ItunesSummary == nil || feed.xmlDoc.Channel.ItunesSummary.Data != summary {
-		t.Errorf("Expected iTunes summary %s, got %v", summary, feed.xmlDoc.Channel.ItunesSummary)
+	if feed.Channel.ItunesSummary == nil || feed.Channel.ItunesSummary.Data != summary {
+		t.Errorf("Expected iTunes summary %s, got %v", summary, feed.Channel.ItunesSummary)
 	}
 
 	// Test WithItunesKeywords
 	keywords := "technology,podcast,apple"
 	feed.WithItunesKeywords(keywords)
-	if feed.xmlDoc.Channel.ItunesKeywords != keywords {
-		t.Errorf("Expected iTunes keywords %s, got %s", keywords, feed.xmlDoc.Channel.ItunesKeywords)
+	if feed.Channel.ItunesKeywords != keywords {
+		t.Errorf("Expected iTunes keywords %s, got %s", keywords, feed.Channel.ItunesKeywords)
 	}
 
 	// Test WithItunesOwner
 	ownerName := "John Doe"
 	ownerEmail := "john@example.com"
 	feed.WithItunesOwner(ownerName, ownerEmail)
-	if feed.xmlDoc.Channel.ItunesOwner == nil {
+	if feed.Channel.ItunesOwner == nil {
 		t.Error("Expected iTunes owner to be set")
 	} else {
-		if feed.xmlDoc.Channel.ItunesOwner.Name != ownerName {
-			t.Errorf("Expected owner name %s, got %s", ownerName, feed.xmlDoc.Channel.ItunesOwner.Name)
+		if feed.Channel.ItunesOwner.Name != ownerName {
+			t.Errorf("Expected owner name %s, got %s", ownerName, feed.Channel.ItunesOwner.Name)
 		}
-		if feed.xmlDoc.Channel.ItunesOwner.Email != ownerEmail {
-			t.Errorf("Expected owner email %s, got %s", ownerEmail, feed.xmlDoc.Channel.ItunesOwner.Email)
+		if feed.Channel.ItunesOwner.Email != ownerEmail {
+			t.Errorf("Expected owner email %s, got %s", ownerEmail, feed.Channel.ItunesOwner.Email)
 		}
 	}
 }
@@ -320,12 +320,12 @@ func TestFeedCategories(t *testing.T) {
 	}
 
 	feed := NewFeed(channelData)
-	if len(feed.xmlDoc.Channel.ItunesCategory) != 1 {
-		t.Errorf("Expected 1 category, got %d", len(feed.xmlDoc.Channel.ItunesCategory))
+	if len(feed.Channel.ItunesCategory) != 1 {
+		t.Errorf("Expected 1 category, got %d", len(feed.Channel.ItunesCategory))
 	}
 
-	if feed.xmlDoc.Channel.ItunesCategory[0].Text != "Technology" {
-		t.Errorf("Expected category 'Technology', got '%s'", feed.xmlDoc.Channel.ItunesCategory[0].Text)
+	if feed.Channel.ItunesCategory[0].Text != "Technology" {
+		t.Errorf("Expected category 'Technology', got '%s'", feed.Channel.ItunesCategory[0].Text)
 	}
 
 	// Test category with subcategories
@@ -341,11 +341,11 @@ func TestFeedCategories(t *testing.T) {
 	}
 
 	feedWithSub := NewFeed(channelDataWithSub)
-	if len(feedWithSub.xmlDoc.Channel.ItunesCategory) != 1 {
-		t.Errorf("Expected 1 category, got %d", len(feedWithSub.xmlDoc.Channel.ItunesCategory))
+	if len(feedWithSub.Channel.ItunesCategory) != 1 {
+		t.Errorf("Expected 1 category, got %d", len(feedWithSub.Channel.ItunesCategory))
 	}
 
-	cat := feedWithSub.xmlDoc.Channel.ItunesCategory[0]
+	cat := feedWithSub.Channel.ItunesCategory[0]
 	if cat.Text != "Society & Culture" {
 		t.Errorf("Expected category 'Society & Culture', got '%s'", cat.Text)
 	}
@@ -372,8 +372,8 @@ func TestFeedCategories(t *testing.T) {
 	}
 
 	feedMultiple := NewFeed(channelDataMultiple)
-	if len(feedMultiple.xmlDoc.Channel.ItunesCategory) != 2 {
-		t.Errorf("Expected 2 categories, got %d", len(feedMultiple.xmlDoc.Channel.ItunesCategory))
+	if len(feedMultiple.Channel.ItunesCategory) != 2 {
+		t.Errorf("Expected 2 categories, got %d", len(feedMultiple.Channel.ItunesCategory))
 	}
 }
 
@@ -390,8 +390,8 @@ func TestFeedAddItem(t *testing.T) {
 	feed := NewFeed(channelData)
 
 	// Initially no items
-	if len(feed.xmlDoc.Channel.Items) != 0 {
-		t.Errorf("Expected 0 items, got %d", len(feed.xmlDoc.Channel.Items))
+	if len(feed.Channel.Items) != 0 {
+		t.Errorf("Expected 0 items, got %d", len(feed.Channel.Items))
 	}
 
 	// Add an item
@@ -408,11 +408,11 @@ func TestFeedAddItem(t *testing.T) {
 	item := NewItem(itemData)
 	feed.AddItem(item)
 
-	if len(feed.xmlDoc.Channel.Items) != 1 {
-		t.Errorf("Expected 1 item, got %d", len(feed.xmlDoc.Channel.Items))
+	if len(feed.Channel.Items) != 1 {
+		t.Errorf("Expected 1 item, got %d", len(feed.Channel.Items))
 	}
 
-	addedItem := feed.xmlDoc.Channel.Items[0]
+	addedItem := feed.Channel.Items[0]
 	if addedItem.Title != itemData.Title {
 		t.Errorf("Expected item title %s, got %s", itemData.Title, addedItem.Title)
 	}
