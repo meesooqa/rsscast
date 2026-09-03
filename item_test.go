@@ -171,6 +171,7 @@ func TestItemValidation_RequiredFields(t *testing.T) {
 	}
 }
 
+//nolint:gocyclo // The test checks many fields; branching is isolated within t.Run
 func TestItemWithOptionalFields(t *testing.T) {
 	itemData := ItemData{
 		Title: "Test Episode",
@@ -182,130 +183,156 @@ func TestItemWithOptionalFields(t *testing.T) {
 		},
 	}
 
-	item := NewItem(itemData)
-
-	// Test WithPubDate
-	pubDate := time.Date(2023, 4, 1, 19, 0, 0, 0, time.UTC)
-	item.WithPubDate(pubDate)
-	expectedPubDate := pubDate.Format(time.RFC1123Z)
-	if item.PubDate != expectedPubDate {
-		t.Errorf("Expected pubDate %s, got %s", expectedPubDate, item.PubDate)
-	}
-
-	// Test WithDescription
-	description := "This is a test episode description with <html> tags & special characters"
-	item.WithDescription(description)
-	if item.Description == nil || item.Description.Data != description {
-		t.Errorf("Expected description %s, got %v", description, item.Description)
-	}
-
-	// Test WithItunesDuration
-	duration := int64(3600) // 1 hour in seconds
-	item.WithItunesDuration(duration)
-	if item.ItunesDuration != "3600" {
-		t.Errorf("Expected duration '3600', got '%s'", item.ItunesDuration)
-	}
-
-	// Test WithLink
-	link := "https://example.com/episodes/episode1"
-	item.WithLink(link)
-	if item.Link != link {
-		t.Errorf("Expected link %s, got %s", link, item.Link)
-	}
-
-	// Test WithItunesImage
-	imageURL := "https://example.com/episode1-artwork.jpg"
-	item.WithItunesImage(imageURL)
-	if item.ItunesImage == nil || item.ItunesImage.Href != imageURL {
-		t.Errorf("Expected iTunes image %s, got %v", imageURL, item.ItunesImage)
-	}
-
-	// Test WithItunesExplicit
-	item.WithItunesExplicit(ExplicitTrue)
-	if item.ItunesExplicit != ExplicitTrue {
-		t.Errorf("Expected iTunes explicit %s, got %s", ExplicitTrue, item.ItunesExplicit)
-	}
-
-	// Test WithItunesTitle
-	itunesTitle := "Episode 1: Introduction"
-	item.WithItunesTitle(itunesTitle)
-	if item.ItunesTitle != itunesTitle {
-		t.Errorf("Expected iTunes title %s, got %s", itunesTitle, item.ItunesTitle)
-	}
-
-	// Test WithItunesEpisode
-	episodeNumber := 1
-	item.WithItunesEpisode(episodeNumber)
-	if item.ItunesEpisode != "1" {
-		t.Errorf("Expected iTunes episode '1', got '%s'", item.ItunesEpisode)
-	}
-
-	// Test WithItunesEpisode with zero (should not set)
-	item.WithItunesEpisode(0)
-	if item.ItunesEpisode != "1" { // Should remain unchanged
-		t.Errorf("Expected iTunes episode to remain '1', got '%s'", item.ItunesEpisode)
-	}
-
-	// Test WithItunesSeason
-	seasonNumber := 1
-	item.WithItunesSeason(seasonNumber)
-	if item.ItunesSeason != "1" {
-		t.Errorf("Expected iTunes season '1', got '%s'", item.ItunesSeason)
-	}
-
-	// Test WithItunesSeason with zero (should not set)
-	item.WithItunesSeason(0)
-	if item.ItunesSeason != "1" { // Should remain unchanged
-		t.Errorf("Expected iTunes season to remain '1', got '%s'", item.ItunesSeason)
-	}
-
-	// Test WithItunesEpisodeType
-	item.WithItunesEpisodeType(EpisodeFull)
-	if item.ItunesEpisodeType != EpisodeFull {
-		t.Errorf("Expected iTunes episode type %s, got %s", EpisodeFull, item.ItunesEpisodeType)
-	}
-
-	// Test WithPodcastTranscript
-	transcriptURL := "https://example.com/transcripts/episode1.vtt"
-	item.WithPodcastTranscript(transcriptURL, TranscriptVtt)
-	if len(item.PodcastTranscripts) != 1 {
-		t.Errorf("Expected 1 transcript, got %d", len(item.PodcastTranscripts))
-	} else {
-		transcript := item.PodcastTranscripts[0]
-		if transcript.Url != transcriptURL {
-			t.Errorf("Expected transcript URL %s, got %s", transcriptURL, transcript.Url)
+	t.Run("WithPubDate", func(t *testing.T) {
+		item := NewItem(itemData)
+		pubDate := time.Date(2023, 4, 1, 19, 0, 0, 0, time.UTC)
+		item.WithPubDate(pubDate)
+		expectedPubDate := pubDate.Format(time.RFC1123Z)
+		if item.PubDate != expectedPubDate {
+			t.Errorf("Expected pubDate %s, got %s", expectedPubDate, item.PubDate)
 		}
-		if transcript.Type != string(TranscriptVtt) {
-			t.Errorf("Expected transcript type %s, got %s", TranscriptVtt, transcript.Type)
+	})
+
+	t.Run("WithDescription", func(t *testing.T) {
+		item := NewItem(itemData)
+		description := "This is a test episode description with <html> tags & special characters"
+		item.WithDescription(description)
+		if item.Description == nil || item.Description.Data != description {
+			t.Errorf("Expected description %s, got %v", description, item.Description)
 		}
-	}
+	})
 
-	// Test multiple transcripts
-	srtURL := "https://example.com/transcripts/episode1.srt"
-	item.WithPodcastTranscript(srtURL, TranscriptSrt)
-	if len(item.PodcastTranscripts) != 2 {
-		t.Errorf("Expected 2 transcripts, got %d", len(item.PodcastTranscripts))
-	}
+	t.Run("WithItunesDuration", func(t *testing.T) {
+		item := NewItem(itemData)
+		duration := int64(3600) // 1 hour in seconds
+		item.WithItunesDuration(duration)
+		if item.ItunesDuration != "3600" {
+			t.Errorf("Expected duration '3600', got '%s'", item.ItunesDuration)
+		}
+	})
 
-	// Test WithItunesBlock
-	item.WithItunesBlock(BlockYes)
-	if item.ItunesBlock != BlockYes {
-		t.Errorf("Expected iTunes block %s, got %s", BlockYes, item.ItunesBlock)
-	}
+	t.Run("WithLink", func(t *testing.T) {
+		item := NewItem(itemData)
+		link := "https://example.com/episodes/episode1"
+		item.WithLink(link)
+		if item.Link != link {
+			t.Errorf("Expected link %s, got %s", link, item.Link)
+		}
+	})
 
-	// Test WithItunesAuthor
-	author := "Episode Author"
-	item.WithItunesAuthor(author)
-	if item.ItunesAuthor != author {
-		t.Errorf("Expected iTunes author %s, got %s", author, item.ItunesAuthor)
-	}
+	t.Run("WithItunesImage", func(t *testing.T) {
+		item := NewItem(itemData)
+		imageURL := "https://example.com/episode1-artwork.jpg"
+		item.WithItunesImage(imageURL)
+		if item.ItunesImage == nil || item.ItunesImage.Href != imageURL {
+			t.Errorf("Expected iTunes image %s, got %v", imageURL, item.ItunesImage)
+		}
+	})
 
-	// Test WithItunesSummary
-	summary := "This is an episode summary with <formatting> & special characters"
-	item.WithItunesSummary(summary)
-	if item.ItunesSummary == nil || item.ItunesSummary.Data != summary {
-		t.Errorf("Expected iTunes summary %s, got %v", summary, item.ItunesSummary)
-	}
+	t.Run("WithItunesExplicit", func(t *testing.T) {
+		item := NewItem(itemData)
+		item.WithItunesExplicit(ExplicitTrue)
+		if item.ItunesExplicit != ExplicitTrue {
+			t.Errorf("Expected iTunes explicit %s, got %s", ExplicitTrue, item.ItunesExplicit)
+		}
+	})
+
+	t.Run("WithItunesTitle", func(t *testing.T) {
+		item := NewItem(itemData)
+		itunesTitle := "Episode 1: Introduction"
+		item.WithItunesTitle(itunesTitle)
+		if item.ItunesTitle != itunesTitle {
+			t.Errorf("Expected iTunes title %s, got %s", itunesTitle, item.ItunesTitle)
+		}
+	})
+
+	t.Run("WithItunesEpisode", func(t *testing.T) {
+		item := NewItem(itemData)
+		episodeNumber := 1
+		item.WithItunesEpisode(episodeNumber)
+		if item.ItunesEpisode != "1" {
+			t.Errorf("Expected iTunes episode '1', got '%s'", item.ItunesEpisode)
+		}
+
+		// Test WithItunesEpisode with zero (should not set)
+		item.WithItunesEpisode(0)
+		if item.ItunesEpisode != "1" { // Should remain unchanged
+			t.Errorf("Expected iTunes episode to remain '1', got '%s'", item.ItunesEpisode)
+		}
+	})
+
+	t.Run("WithItunesSeason", func(t *testing.T) {
+		item := NewItem(itemData)
+		seasonNumber := 1
+		item.WithItunesSeason(seasonNumber)
+		if item.ItunesSeason != "1" {
+			t.Errorf("Expected iTunes season '1', got '%s'", item.ItunesSeason)
+		}
+
+		// Test WithItunesSeason with zero (should not set)
+		item.WithItunesSeason(0)
+		if item.ItunesSeason != "1" { // Should remain unchanged
+			t.Errorf("Expected iTunes season to remain '1', got '%s'", item.ItunesSeason)
+		}
+	})
+
+	t.Run("WithItunesEpisodeType", func(t *testing.T) {
+		item := NewItem(itemData)
+		item.WithItunesEpisodeType(EpisodeFull)
+		if item.ItunesEpisodeType != EpisodeFull {
+			t.Errorf("Expected iTunes episode type %s, got %s", EpisodeFull, item.ItunesEpisodeType)
+		}
+	})
+
+	t.Run("WithPodcastTranscript", func(t *testing.T) {
+		item := NewItem(itemData)
+		transcriptURL := "https://example.com/transcripts/episode1.vtt"
+		item.WithPodcastTranscript(transcriptURL, TranscriptVtt)
+		if len(item.PodcastTranscripts) != 1 {
+			t.Errorf("Expected 1 transcript, got %d", len(item.PodcastTranscripts))
+		} else {
+			transcript := item.PodcastTranscripts[0]
+			if transcript.Url != transcriptURL {
+				t.Errorf("Expected transcript URL %s, got %s", transcriptURL, transcript.Url)
+			}
+			if transcript.Type != string(TranscriptVtt) {
+				t.Errorf("Expected transcript type %s, got %s", TranscriptVtt, transcript.Type)
+			}
+		}
+
+		// Test multiple transcripts
+		srtURL := "https://example.com/transcripts/episode1.srt"
+		item.WithPodcastTranscript(srtURL, TranscriptSrt)
+		if len(item.PodcastTranscripts) != 2 {
+			t.Errorf("Expected 2 transcripts, got %d", len(item.PodcastTranscripts))
+		}
+	})
+
+	t.Run("WithItunesBlock", func(t *testing.T) {
+		item := NewItem(itemData)
+		item.WithItunesBlock(BlockYes)
+		if item.ItunesBlock != BlockYes {
+			t.Errorf("Expected iTunes block %s, got %s", BlockYes, item.ItunesBlock)
+		}
+	})
+
+	t.Run("WithItunesAuthor", func(t *testing.T) {
+		item := NewItem(itemData)
+		author := "Episode Author"
+		item.WithItunesAuthor(author)
+		if item.ItunesAuthor != author {
+			t.Errorf("Expected iTunes author %s, got %s", author, item.ItunesAuthor)
+		}
+	})
+
+	t.Run("WithItunesSummary", func(t *testing.T) {
+		item := NewItem(itemData)
+		summary := "This is an episode summary with <formatting> & special characters"
+		item.WithItunesSummary(summary)
+		if item.ItunesSummary == nil || item.ItunesSummary.Data != summary {
+			t.Errorf("Expected iTunes summary %s, got %v", summary, item.ItunesSummary)
+		}
+	})
 }
 
 func TestItemExplicitValidation(t *testing.T) {
