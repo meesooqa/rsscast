@@ -8,20 +8,13 @@ TIMESTAMP=$(shell git log -1 --format=%ct HEAD 2>/dev/null | xargs -I{} date -u 
 GIT_REV=$(shell printf "%s-%s-%s" "$(BRANCH)" "$(HASH)" "$(TIMESTAMP)")
 REV=$(if $(filter --,$(GIT_REV)),latest,$(GIT_REV))
 
-.PHONY: run build upd version help \
+.PHONY: upd version help \
 		generate test race \
 		fmt fmt-check vet lint check
 
 version: ## show git version information
 	@echo "branch: $(BRANCH), hash: $(HASH), timestamp: $(TIMESTAMP)"
 	@echo "revision: $(REV)"
-
-run: ## run the application
-	go run ./cmd/app/main.go
-
-build: ## build the application binary
-	go build -ldflags "-X main.revision=$(REV) -s -w" -o .bin/app.$(BRANCH) ./cmd/app
-	cp .bin/app.$(BRANCH) .bin/app
 
 generate: ## run code generation
 	go generate ./...
