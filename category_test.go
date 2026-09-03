@@ -1,6 +1,7 @@
 package rsscast
 
 import (
+	"slices"
 	"testing"
 )
 
@@ -331,13 +332,7 @@ func TestCategoryDocumentationCompliance(t *testing.T) {
 					t.Errorf("Failed to add subcategory %s to %s", sub, mainCat)
 				}
 
-				found := false
-				for _, actualSub := range category.Subcategories {
-					if actualSub == sub {
-						found = true
-						break
-					}
-				}
+				found := slices.Contains(category.Subcategories, sub)
 
 				if !found {
 					t.Errorf("Subcategory %s not found in %s", sub, mainCat)
