@@ -514,9 +514,7 @@ func TestFeedEncodeValidation(t *testing.T) {
 	err := feed.Encode(&buf)
 	if err == nil {
 		t.Error("Expected encode to fail for feed without items")
-	} else {
-		if !strings.Contains(err.Error(), "feed validation failed") {
-			t.Errorf("Expected validation error, got: %v", err)
-		}
+	} else if !strings.Contains(err.Error(), "feed validation failed") {
+		t.Errorf("Expected validation error, got: %v", err)
 	}
 }
