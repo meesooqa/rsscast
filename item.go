@@ -31,14 +31,14 @@ func NewItem(data ItemData) *Item {
 //
 // See https://help.apple.com/itc/podcasts_connect/#/itcb54353390
 func (i *Item) Validate() error {
-	return i.xmlItem.validate()
+	return i.validate()
 }
 
 // WithPubDate sets the publication date for the episode.
 // The date should be in RFC1123 format, e.g., "Mon, 02 Jan 2006 15:04:05 MST"
 // which is equivalent to time.RFC1123Z in Go.
 func (i *Item) WithPubDate(pubDate time.Time) *Item {
-	i.xmlItem.PubDate = pubDate.Format(time.RFC1123Z)
+	i.PubDate = pubDate.Format(time.RFC1123Z)
 	return i
 }
 
@@ -47,20 +47,20 @@ func (i *Item) WithPubDate(pubDate time.Time) *Item {
 // You can use rich text formatting and some HTML (<p>, <ol>, <ul>, <li>, <a>)
 // if wrapped in the <CDATA> tag.
 func (i *Item) WithDescription(description string) *Item {
-	i.xmlItem.Description = &xmlCDATA{Data: description}
+	i.Description = &xmlCDATA{Data: description}
 	return i
 }
 
 // WithItunesDuration sets the <itunes:duration> tag containing the length of the episode in seconds.
 func (i *Item) WithItunesDuration(duration int64) *Item {
-	i.xmlItem.ItunesDuration = strconv.FormatInt(duration, 10)
+	i.ItunesDuration = strconv.FormatInt(duration, 10)
 	return i
 }
 
 // WithLink sets the <link> tag containing episode link URL.
 // This is used when an episode has a corresponding webpage. Use the full URL
 func (i *Item) WithLink(link string) *Item {
-	i.xmlItem.Link = link
+	i.Link = link
 	return i
 }
 
@@ -81,14 +81,14 @@ func (i *Item) WithLink(link string) *Item {
 //
 // Make sure the file type in the URL matches the actual file type of the image file.
 func (i *Item) WithItunesImage(href string) *Item {
-	i.xmlItem.ItunesImage = &xmlItunesImage{Href: href}
+	i.ItunesImage = &xmlItunesImage{Href: href}
 	return i
 }
 
 // WithItunesExplicit sets the <itunes:explicit> tag containing parental advisory information.
 // See Explicit for supported values.
 func (i *Item) WithItunesExplicit(explicit Explicit) *Item {
-	i.xmlItem.ItunesExplicit = explicit
+	i.ItunesExplicit = explicit
 	return i
 }
 
@@ -100,7 +100,7 @@ func (i *Item) WithItunesExplicit(explicit Explicit) *Item {
 // Separating episode and season number from the title makes it possible
 // for Apple to easily index and order content from all shows.
 func (i *Item) WithItunesTitle(title string) *Item {
-	i.xmlItem.ItunesTitle = title
+	i.ItunesTitle = title
 	return i
 }
 
@@ -116,7 +116,7 @@ func (i *Item) WithItunesTitle(title string) *Item {
 // https://podcasters.apple.com/support/set-up-your-show-for-a-subscription
 func (i *Item) WithItunesEpisode(episode int) *Item {
 	if episode > 0 {
-		i.xmlItem.ItunesEpisode = strconv.Itoa(episode)
+		i.ItunesEpisode = strconv.Itoa(episode)
 	}
 	return i
 }
@@ -128,7 +128,7 @@ func (i *Item) WithItunesEpisode(episode int) *Item {
 // When you add a second season to the RSS feed, Apple Podcasts displays the season numbers.
 func (i *Item) WithItunesSeason(season int) *Item {
 	if season > 0 {
-		i.xmlItem.ItunesSeason = strconv.Itoa(season)
+		i.ItunesSeason = strconv.Itoa(season)
 	}
 	return i
 }
@@ -137,7 +137,7 @@ func (i *Item) WithItunesSeason(season int) *Item {
 // If an episode is a trailer or bonus content, use this tag.
 // See ItunesEpisodeType for supported values.
 func (i *Item) WithItunesEpisodeType(episodeType ItunesEpisodeType) *Item {
-	i.xmlItem.ItunesEpisodeType = episodeType
+	i.ItunesEpisodeType = episodeType
 	return i
 }
 
@@ -147,7 +147,7 @@ func (i *Item) WithItunesEpisodeType(episodeType ItunesEpisodeType) *Item {
 // Apple Podcasts will prefer VTT format over SRT format if multiple instances are included.
 // See PodcastTranscriptType for supported values.
 func (i *Item) WithPodcastTranscript(url string, transcriptType PodcastTranscriptType) *Item {
-	i.xmlItem.PodcastTranscripts = append(i.xmlItem.PodcastTranscripts, xmlPodcastTranscript{
+	i.PodcastTranscripts = append(i.PodcastTranscripts, xmlPodcastTranscript{
 		Url:  url,
 		Type: string(transcriptType),
 	})
@@ -160,7 +160,7 @@ func (i *Item) WithPodcastTranscript(url string, transcriptType PodcastTranscrip
 // its content would otherwise cause the entire podcast to be removed from Apple Podcasts.
 // See ItunesBlock for supported values.
 func (i *Item) WithItunesBlock(block ItunesBlock) *Item {
-	i.xmlItem.ItunesBlock = block
+	i.ItunesBlock = block
 	return i
 }
 
@@ -168,7 +168,7 @@ func (i *Item) WithItunesBlock(block ItunesBlock) *Item {
 // If the episode has a different author than the podcast author,
 // use this tag to specify the episode author.
 func (i *Item) WithItunesAuthor(author string) *Item {
-	i.xmlItem.ItunesAuthor = author
+	i.ItunesAuthor = author
 	return i
 }
 
@@ -177,7 +177,7 @@ func (i *Item) WithItunesAuthor(author string) *Item {
 // You can use rich text formatting and some HTML (<p>, <ol>, <ul>, <li>, <a>)
 // if wrapped in the <CDATA> tag.
 func (i *Item) WithItunesSummary(summary string) *Item {
-	i.xmlItem.ItunesSummary = &xmlCDATA{Data: summary}
+	i.ItunesSummary = &xmlCDATA{Data: summary}
 	return i
 }
 

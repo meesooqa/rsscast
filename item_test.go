@@ -24,24 +24,24 @@ func TestNewItem(t *testing.T) {
 	}
 
 	// Test basic structure
-	if item.xmlItem.Title != itemData.Title {
-		t.Errorf("Expected title %s, got %s", itemData.Title, item.xmlItem.Title)
+	if item.Title != itemData.Title {
+		t.Errorf("Expected title %s, got %s", itemData.Title, item.Title)
 	}
 
-	if item.xmlItem.Guid != itemData.Guid {
-		t.Errorf("Expected Guid %s, got %s", itemData.Guid, item.xmlItem.Guid)
+	if item.Guid != itemData.Guid {
+		t.Errorf("Expected Guid %s, got %s", itemData.Guid, item.Guid)
 	}
 
-	if item.xmlItem.Enclosure.URL != itemData.Enclosure.URL {
-		t.Errorf("Expected enclosure URL %s, got %s", itemData.Enclosure.URL, item.xmlItem.Enclosure.URL)
+	if item.Enclosure.URL != itemData.Enclosure.URL {
+		t.Errorf("Expected enclosure URL %s, got %s", itemData.Enclosure.URL, item.Enclosure.URL)
 	}
 
-	if item.xmlItem.Enclosure.Length != itemData.Enclosure.Length {
-		t.Errorf("Expected enclosure length %d, got %d", itemData.Enclosure.Length, item.xmlItem.Enclosure.Length)
+	if item.Enclosure.Length != itemData.Enclosure.Length {
+		t.Errorf("Expected enclosure length %d, got %d", itemData.Enclosure.Length, item.Enclosure.Length)
 	}
 
-	if item.xmlItem.Enclosure.Type != itemData.Enclosure.Type {
-		t.Errorf("Expected enclosure type %s, got %s", itemData.Enclosure.Type, item.xmlItem.Enclosure.Type)
+	if item.Enclosure.Type != itemData.Enclosure.Type {
+		t.Errorf("Expected enclosure type %s, got %s", itemData.Enclosure.Type, item.Enclosure.Type)
 	}
 }
 
@@ -188,90 +188,90 @@ func TestItemWithOptionalFields(t *testing.T) {
 	pubDate := time.Date(2023, 4, 1, 19, 0, 0, 0, time.UTC)
 	item.WithPubDate(pubDate)
 	expectedPubDate := pubDate.Format(time.RFC1123Z)
-	if item.xmlItem.PubDate != expectedPubDate {
-		t.Errorf("Expected pubDate %s, got %s", expectedPubDate, item.xmlItem.PubDate)
+	if item.PubDate != expectedPubDate {
+		t.Errorf("Expected pubDate %s, got %s", expectedPubDate, item.PubDate)
 	}
 
 	// Test WithDescription
 	description := "This is a test episode description with <html> tags & special characters"
 	item.WithDescription(description)
-	if item.xmlItem.Description == nil || item.xmlItem.Description.Data != description {
-		t.Errorf("Expected description %s, got %v", description, item.xmlItem.Description)
+	if item.Description == nil || item.Description.Data != description {
+		t.Errorf("Expected description %s, got %v", description, item.Description)
 	}
 
 	// Test WithItunesDuration
 	duration := int64(3600) // 1 hour in seconds
 	item.WithItunesDuration(duration)
-	if item.xmlItem.ItunesDuration != "3600" {
-		t.Errorf("Expected duration '3600', got '%s'", item.xmlItem.ItunesDuration)
+	if item.ItunesDuration != "3600" {
+		t.Errorf("Expected duration '3600', got '%s'", item.ItunesDuration)
 	}
 
 	// Test WithLink
 	link := "https://example.com/episodes/episode1"
 	item.WithLink(link)
-	if item.xmlItem.Link != link {
-		t.Errorf("Expected link %s, got %s", link, item.xmlItem.Link)
+	if item.Link != link {
+		t.Errorf("Expected link %s, got %s", link, item.Link)
 	}
 
 	// Test WithItunesImage
 	imageURL := "https://example.com/episode1-artwork.jpg"
 	item.WithItunesImage(imageURL)
-	if item.xmlItem.ItunesImage == nil || item.xmlItem.ItunesImage.Href != imageURL {
-		t.Errorf("Expected iTunes image %s, got %v", imageURL, item.xmlItem.ItunesImage)
+	if item.ItunesImage == nil || item.ItunesImage.Href != imageURL {
+		t.Errorf("Expected iTunes image %s, got %v", imageURL, item.ItunesImage)
 	}
 
 	// Test WithItunesExplicit
 	item.WithItunesExplicit(ExplicitTrue)
-	if item.xmlItem.ItunesExplicit != ExplicitTrue {
-		t.Errorf("Expected iTunes explicit %s, got %s", ExplicitTrue, item.xmlItem.ItunesExplicit)
+	if item.ItunesExplicit != ExplicitTrue {
+		t.Errorf("Expected iTunes explicit %s, got %s", ExplicitTrue, item.ItunesExplicit)
 	}
 
 	// Test WithItunesTitle
 	itunesTitle := "Episode 1: Introduction"
 	item.WithItunesTitle(itunesTitle)
-	if item.xmlItem.ItunesTitle != itunesTitle {
-		t.Errorf("Expected iTunes title %s, got %s", itunesTitle, item.xmlItem.ItunesTitle)
+	if item.ItunesTitle != itunesTitle {
+		t.Errorf("Expected iTunes title %s, got %s", itunesTitle, item.ItunesTitle)
 	}
 
 	// Test WithItunesEpisode
 	episodeNumber := 1
 	item.WithItunesEpisode(episodeNumber)
-	if item.xmlItem.ItunesEpisode != "1" {
-		t.Errorf("Expected iTunes episode '1', got '%s'", item.xmlItem.ItunesEpisode)
+	if item.ItunesEpisode != "1" {
+		t.Errorf("Expected iTunes episode '1', got '%s'", item.ItunesEpisode)
 	}
 
 	// Test WithItunesEpisode with zero (should not set)
 	item.WithItunesEpisode(0)
-	if item.xmlItem.ItunesEpisode != "1" { // Should remain unchanged
-		t.Errorf("Expected iTunes episode to remain '1', got '%s'", item.xmlItem.ItunesEpisode)
+	if item.ItunesEpisode != "1" { // Should remain unchanged
+		t.Errorf("Expected iTunes episode to remain '1', got '%s'", item.ItunesEpisode)
 	}
 
 	// Test WithItunesSeason
 	seasonNumber := 1
 	item.WithItunesSeason(seasonNumber)
-	if item.xmlItem.ItunesSeason != "1" {
-		t.Errorf("Expected iTunes season '1', got '%s'", item.xmlItem.ItunesSeason)
+	if item.ItunesSeason != "1" {
+		t.Errorf("Expected iTunes season '1', got '%s'", item.ItunesSeason)
 	}
 
 	// Test WithItunesSeason with zero (should not set)
 	item.WithItunesSeason(0)
-	if item.xmlItem.ItunesSeason != "1" { // Should remain unchanged
-		t.Errorf("Expected iTunes season to remain '1', got '%s'", item.xmlItem.ItunesSeason)
+	if item.ItunesSeason != "1" { // Should remain unchanged
+		t.Errorf("Expected iTunes season to remain '1', got '%s'", item.ItunesSeason)
 	}
 
 	// Test WithItunesEpisodeType
 	item.WithItunesEpisodeType(EpisodeFull)
-	if item.xmlItem.ItunesEpisodeType != EpisodeFull {
-		t.Errorf("Expected iTunes episode type %s, got %s", EpisodeFull, item.xmlItem.ItunesEpisodeType)
+	if item.ItunesEpisodeType != EpisodeFull {
+		t.Errorf("Expected iTunes episode type %s, got %s", EpisodeFull, item.ItunesEpisodeType)
 	}
 
 	// Test WithPodcastTranscript
 	transcriptURL := "https://example.com/transcripts/episode1.vtt"
 	item.WithPodcastTranscript(transcriptURL, TranscriptVtt)
-	if len(item.xmlItem.PodcastTranscripts) != 1 {
-		t.Errorf("Expected 1 transcript, got %d", len(item.xmlItem.PodcastTranscripts))
+	if len(item.PodcastTranscripts) != 1 {
+		t.Errorf("Expected 1 transcript, got %d", len(item.PodcastTranscripts))
 	} else {
-		transcript := item.xmlItem.PodcastTranscripts[0]
+		transcript := item.PodcastTranscripts[0]
 		if transcript.Url != transcriptURL {
 			t.Errorf("Expected transcript URL %s, got %s", transcriptURL, transcript.Url)
 		}
@@ -283,28 +283,28 @@ func TestItemWithOptionalFields(t *testing.T) {
 	// Test multiple transcripts
 	srtURL := "https://example.com/transcripts/episode1.srt"
 	item.WithPodcastTranscript(srtURL, TranscriptSrt)
-	if len(item.xmlItem.PodcastTranscripts) != 2 {
-		t.Errorf("Expected 2 transcripts, got %d", len(item.xmlItem.PodcastTranscripts))
+	if len(item.PodcastTranscripts) != 2 {
+		t.Errorf("Expected 2 transcripts, got %d", len(item.PodcastTranscripts))
 	}
 
 	// Test WithItunesBlock
 	item.WithItunesBlock(BlockYes)
-	if item.xmlItem.ItunesBlock != BlockYes {
-		t.Errorf("Expected iTunes block %s, got %s", BlockYes, item.xmlItem.ItunesBlock)
+	if item.ItunesBlock != BlockYes {
+		t.Errorf("Expected iTunes block %s, got %s", BlockYes, item.ItunesBlock)
 	}
 
 	// Test WithItunesAuthor
 	author := "Episode Author"
 	item.WithItunesAuthor(author)
-	if item.xmlItem.ItunesAuthor != author {
-		t.Errorf("Expected iTunes author %s, got %s", author, item.xmlItem.ItunesAuthor)
+	if item.ItunesAuthor != author {
+		t.Errorf("Expected iTunes author %s, got %s", author, item.ItunesAuthor)
 	}
 
 	// Test WithItunesSummary
 	summary := "This is an episode summary with <formatting> & special characters"
 	item.WithItunesSummary(summary)
-	if item.xmlItem.ItunesSummary == nil || item.xmlItem.ItunesSummary.Data != summary {
-		t.Errorf("Expected iTunes summary %s, got %v", summary, item.xmlItem.ItunesSummary)
+	if item.ItunesSummary == nil || item.ItunesSummary.Data != summary {
+		t.Errorf("Expected iTunes summary %s, got %v", summary, item.ItunesSummary)
 	}
 }
 
@@ -397,8 +397,8 @@ func TestItemEnclosureTypes(t *testing.T) {
 				t.Errorf("Valid enclosure type %s should not cause validation error: %v", encType, err)
 			}
 
-			if item.xmlItem.Enclosure.Type != encType {
-				t.Errorf("Expected enclosure type %s, got %s", encType, item.xmlItem.Enclosure.Type)
+			if item.Enclosure.Type != encType {
+				t.Errorf("Expected enclosure type %s, got %s", encType, item.Enclosure.Type)
 			}
 		})
 	}
@@ -426,8 +426,8 @@ func TestItemEpisodeTypes(t *testing.T) {
 			item := NewItem(itemData)
 			item.WithItunesEpisodeType(epType)
 
-			if item.xmlItem.ItunesEpisodeType != epType {
-				t.Errorf("Expected episode type %s, got %s", epType, item.xmlItem.ItunesEpisodeType)
+			if item.ItunesEpisodeType != epType {
+				t.Errorf("Expected episode type %s, got %s", epType, item.ItunesEpisodeType)
 			}
 
 			err := item.Validate()
@@ -461,10 +461,10 @@ func TestItemTranscriptTypes(t *testing.T) {
 			transcriptURL := "https://example.com/transcript.vtt"
 			item.WithPodcastTranscript(transcriptURL, transType)
 
-			if len(item.xmlItem.PodcastTranscripts) != 1 {
-				t.Errorf("Expected 1 transcript, got %d", len(item.xmlItem.PodcastTranscripts))
+			if len(item.PodcastTranscripts) != 1 {
+				t.Errorf("Expected 1 transcript, got %d", len(item.PodcastTranscripts))
 			} else {
-				transcript := item.xmlItem.PodcastTranscripts[0]
+				transcript := item.PodcastTranscripts[0]
 				if transcript.Type != string(transType) {
 					t.Errorf("Expected transcript type %s, got %s", transType, transcript.Type)
 				}
@@ -513,23 +513,23 @@ func TestItemFluentAPI(t *testing.T) {
 	}
 
 	// Verify all fields were set
-	if item.xmlItem.PubDate != pubDate.Format(time.RFC1123Z) {
+	if item.PubDate != pubDate.Format(time.RFC1123Z) {
 		t.Error("PubDate not set correctly in fluent chain")
 	}
 
-	if item.xmlItem.Description == nil || item.xmlItem.Description.Data != "Test description" {
+	if item.Description == nil || item.Description.Data != "Test description" {
 		t.Error("Description not set correctly in fluent chain")
 	}
 
-	if item.xmlItem.ItunesDuration != "3600" {
+	if item.ItunesDuration != "3600" {
 		t.Error("Duration not set correctly in fluent chain")
 	}
 
-	if item.xmlItem.ItunesEpisode != "1" {
+	if item.ItunesEpisode != "1" {
 		t.Error("Episode number not set correctly in fluent chain")
 	}
 
-	if len(item.xmlItem.PodcastTranscripts) != 1 {
+	if len(item.PodcastTranscripts) != 1 {
 		t.Error("Transcript not added correctly in fluent chain")
 	}
 
